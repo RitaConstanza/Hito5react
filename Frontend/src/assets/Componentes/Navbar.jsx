@@ -1,13 +1,15 @@
-import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import { useContext, useState } from "react";
+import { CartContext } from "../Context/Context";
 
 function Navbar() {
-  const [token, setToken] = useState(null);
-  const totalAmount = 25000;
+  const { totalPrice } = useContext(CartContext);
+  const [token, setToken] = useState(false);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100 fixed-top">
       <div className="container-fluid">
         <Link to="/" className="navbar-brand">Pizzería Mamma Mía!</Link>
         <button
@@ -34,16 +36,16 @@ function Navbar() {
                   <Link to="/Profile" className="nav-link">🔓Profile</Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#" onClick={() => setToken(null)}>🔒Logout</a>
+                  <button className="nav-link btn btn-link" onClick={() => setToken(null)}>🔒Logout</button>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <a className="nav-link" href="#" onClick={() => setToken("user_token")}>🔐Login</a>
+                  <button className="nav-link btn btn-link" onClick={() => setToken("user_token")}>🔐Login</button>
                 </li>
                 <li className="nav-item">
-                  <Link to="/Profile" className="nav-link">🔐Register</Link>
+                  <Link to="/Register" className="nav-link">🔐Register</Link>
                 </li>
               </>
             )}
@@ -51,7 +53,9 @@ function Navbar() {
 
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link to="/Cart" className="nav-link">🛒Total: ${totalAmount.toLocaleString("de-DE")}</Link>
+              <Link to="/Cart" className="nav-link">
+                🛒Total: ${totalPrice ? totalPrice.toLocaleString("de-DE") : "0"}
+              </Link>
             </li>
           </ul>
         </div>

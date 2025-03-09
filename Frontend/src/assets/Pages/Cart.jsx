@@ -1,44 +1,41 @@
-import { useState } from 'react';
-import { pizzaCart } from '../Componentes/pizzas'
+import { useContext } from "react";
+import { CartContext } from "../Context/Context";
 
 const Cart = () => {
-  const [cart, setCart] = useState(pizzaCart);
+  const { cart, incrementQuantity, decrementQuantity, totalPrice } = useContext(CartContext);
 
-  const incrementQuantity = (id) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id ? { ...item, count: item.count + 1 } : item
-      )
-    );
+  const handleIncrement = (id) => {
+    incrementQuantity(id); 
   };
 
-  const decrementQuantity = (id) => {
-    setCart(
-        cart.map((item) =>
-          item.id === id && item.count > 0
-            ? { ...item, count: item.count - 1 } : item
-        )
-      );
-    };
-
-  const totalPrice = cart.reduce((total, item) => total + item.price * item.count, 0);
+  const handleDecrement = (id) => {
+    decrementQuantity(id); 
+  };
 
   return (
-    <div className='carrito'>
+    <div className="carrito">
       <h3>Carrito de compras</h3>
-      <ul>
-        {cart.map((item) => (
-          <li key={item.id}>
-            <img src={item.img} alt={item.name} />
-            {item.name} - ${item.price.toLocaleString()}
-            <button onClick={() => decrementQuantity(item.id)}><p>-</p></button>
-            {item.count}
-            <button onClick={() => incrementQuantity(item.id)}><p>+</p></button>
-          </li>
-        ))}
-      </ul>
-      <h3>Total: ${totalPrice.toLocaleString()}</h3>
-      <button className='total'>Total</button>
+      {cart.length === 0 ? (
+        <p>🛒 Tu carrito está vacío</p>
+      ) : (
+        <ul>
+          {cart.map((pizza) => (
+            <li key={pizza.id} className="pizza-item">
+              <img src={pizza.img || "/placeholder.jpg"} alt={pizza.name} width="100" />
+              <div className="pizza-details">
+                <p>{pizza.name} - ${pizza.price?.toLocaleString() || "0"}</p>
+                <div className="quantity-controls">
+                <button onClick={() => handleDecrement(pizza.id)}>➖</button>
+                  <span>{pizza.count || 1}</span>
+                  <button onClick={() => handleIncrement(pizza.id)}>➕</button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      <h3>Total: ${totalPrice?.toLocaleString() || "0"}</h3>
+      <button className="total" onClick={() => alert("Compra realizada")}>Finalizar compra</button>
     </div>
   );
 };
