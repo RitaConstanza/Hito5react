@@ -2,20 +2,20 @@ import { createContext, useState, useEffect } from "react";
 
 export const PizzaContext = createContext();
 
-export function PizzaProvider({ children }) {
+export const PizzaProvider = ({ children }) => {
   const [pizzas, setPizzas] = useState([]);
 
-  async function fetchPizzas() {
-    try {
-      const response = await fetch("http://localhost:5000/api/pizzas");
-      const data = await response.json();
-      setPizzas(data);
-    } catch (error) {
-      console.error("Error fetching pizzas:", error);
-    }
-  }
-
   useEffect(() => {
+    const fetchPizzas = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/pizzas");
+        const data = await response.json();
+        setPizzas(data);
+      } catch (error) {
+        console.error("Error fetching pizzas:", error);
+      }
+    };
+
     fetchPizzas();
   }, []);
 
@@ -24,6 +24,4 @@ export function PizzaProvider({ children }) {
       {children}
     </PizzaContext.Provider>
   );
-}
-
-export default PizzaProvider
+};

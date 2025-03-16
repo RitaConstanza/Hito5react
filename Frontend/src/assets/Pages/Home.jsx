@@ -1,10 +1,12 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import CardPizza from '../Componentes/CardPizza';
 import Header from '../Componentes/Header';
 import { PizzaContext } from '../Context/PizzaContext';
 
 const Home = () => {
   const { pizzas } = useContext(PizzaContext);
+  
+
 
   if (!pizzas) {
     return <p>Cargando...</p>;
@@ -31,4 +33,3 @@ const Home = () => {
 };
 
 export default Home;
-

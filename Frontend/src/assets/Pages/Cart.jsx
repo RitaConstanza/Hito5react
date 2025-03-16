@@ -1,15 +1,17 @@
 import { useContext } from "react";
-import { CartContext } from "../Context/Context";
+import { CartContext } from "../Context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, incrementQuantity, decrementQuantity, totalPrice } = useContext(CartContext);
+  const { cart, incrementQuantity, decrementQuantity, totalPrice, token } = useContext(CartContext);
+  const navigate = useNavigate();
 
-  const handleIncrement = (id) => {
-    incrementQuantity(id); 
-  };
-
-  const handleDecrement = (id) => {
-    decrementQuantity(id); 
+  const handleFinalizarCompra = () => {
+    if (!token) {
+      navigate("/login");
+    } else {
+      alert("Compra realizada");
+    }
   };
 
   return (
@@ -23,19 +25,26 @@ const Cart = () => {
             <li key={pizza.id} className="pizza-item">
               <img src={pizza.img || "/placeholder.jpg"} alt={pizza.name} width="100" />
               <div className="pizza-details">
-                <p>{pizza.name} - ${pizza.price?.toLocaleString() || "0"}</p>
+                <p>{pizza.name} - ${pizza.price?.toLocaleString("de-DE") || "0"}</p>
                 <div className="quantity-controls">
-                <button onClick={() => handleDecrement(pizza.id)}>➖</button>
-                  <span>{pizza.count || 1}</span>
-                  <button onClick={() => handleIncrement(pizza.id)}>➕</button>
+                  <button onClick={() => decrementQuantity(pizza.id)}>➖</button>
+                  <span>{pizza.count}</span>
+                  <button onClick={() => incrementQuantity(pizza.id)}>➕</button>
                 </div>
               </div>
             </li>
           ))}
         </ul>
       )}
-      <h3>Total: ${totalPrice?.toLocaleString() || "0"}</h3>
-      <button className="total" onClick={() => alert("Compra realizada")}>Finalizar compra</button>
+      <h3>Total: ${totalPrice?.toLocaleString("de-DE") || "0"}</h3>
+      <button
+        className="total"
+        onClick={handleFinalizarCompra}
+        disabled={!token}
+      >
+        Finalizar compra
+      </button>
+      {!token && <p style={{ color: "red" }}>🔒 Debes iniciar sesión para comprar.</p>}
     </div>
   );
 };

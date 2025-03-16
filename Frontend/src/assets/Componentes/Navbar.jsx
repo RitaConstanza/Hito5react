@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { useContext, useState } from "react";
-import { CartContext } from "../Context/Context";
+import { useContext } from "react";
+import { CartContext } from "../Context/CartContext"; 
+import { UserContext } from "../Context/UserContext";
 
 function Navbar() {
   const { totalPrice } = useContext(CartContext);
-  const [token, setToken] = useState(false);
+  const { token, logout } = useContext(UserContext); 
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100 fixed-top">
@@ -36,13 +37,15 @@ function Navbar() {
                   <Link to="/Profile" className="nav-link">🔓Profile</Link>
                 </li>
                 <li className="nav-item">
-                  <button className="nav-link btn btn-link" onClick={() => setToken(null)}>🔒Logout</button>
+                  <button className="nav-link btn btn-link" onClick={logout}>
+                    🔒Logout
+                  </button>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <button className="nav-link btn btn-link" onClick={() => setToken("user_token")}>🔐Login</button>
+                  <Link to="/login" className="nav-link">🔐Login</Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/Register" className="nav-link">🔐Register</Link>
@@ -65,3 +68,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
