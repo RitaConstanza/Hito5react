@@ -1,47 +1,41 @@
-import { useState, useContext } from "react";
+import { useState, useContext } from "react"; 
 import "./Login.css";
 import { UserContext } from "../Context/UserContext"; 
 import { useNavigate } from "react-router-dom"; 
 
 const LoginPage = () => {
-  const [dato, setDato] = useState({
-    email: "",
-    password: "",
-  });
+  const { login } = useContext(UserContext);
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); 
-  const { login } = useContext(UserContext); 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setDato({ ...dato, [e.target.name]: e.target.value });
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const validarInput = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = dato;
-
-    const validEmail = "usuario@gmail.com";
-    const validPassword = "123456";
-
-    if (email !== validEmail || password !== validPassword) {
-      setMessage("Email o contraseña incorrectos");
-      return;
+    try {
+      await login(credentials);
+      navigate("/profile");
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      alert("Credenciales incorrectas. Inténtalo de nuevo.");
     }
-
-    setMessage("Datos correctos");
-    login("user_token"); 
-    navigate("/cart");   
   };
+  
 
   return (
     <div className="login-container">
-      <form className="login-card" onSubmit={validarInput}>
+      <form className="login-card" onSubmit={handleSubmit}>
         <div className="container">
           <p>Email</p>
           <input
             type="email"
             name="email"
-            value={dato.email}
+            className="form-control"
+            placeholder="Ingrese su correo"
+            value={credentials.email}
             onChange={handleChange}
           />
 
@@ -49,7 +43,9 @@ const LoginPage = () => {
           <input
             type="password"
             name="password"
-            value={dato.password}
+            className="form-control"
+            placeholder="Ingrese su contraseña"
+            value={credentials.password}
             onChange={handleChange}
           />
           <button type="submit">Enviar</button>

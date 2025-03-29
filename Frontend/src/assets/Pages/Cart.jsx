@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { CartContext } from "../Context/CartContext";
+import { UserContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, incrementQuantity, decrementQuantity, totalPrice, token } = useContext(CartContext);
+  const { token } = useContext(UserContext);
+  
+  const { cart, incrementQuantity, decrementQuantity, totalPrice } = useContext(CartContext);
   const navigate = useNavigate();
 
   const handleFinalizarCompra = () => {
